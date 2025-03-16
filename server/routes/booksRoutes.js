@@ -1,4 +1,4 @@
-import express from 'express';
+import express from 'express'; 
 import { Book } from '../models/bookModels.js';
 
 const router = express.Router();
@@ -36,7 +36,6 @@ router.post('/', async (request, response) => {
 router.get('/', async (request, response) => {
     try {
         const books = await Book.find({});
-
         return response.status(200).json({
             count: books.length,
             data: books
@@ -51,9 +50,7 @@ router.get('/', async (request, response) => {
 router.get('/:id', async (request, response) => {
     try {
         const { id } = request.params;
-
         const book = await Book.findById(id);
-
         return response.status(200).json(book);
     } catch (error) {
         console.log(error.message);
@@ -76,7 +73,6 @@ router.put('/:id', async (request, response) => {
         }
 
         const { id } = request.params;
-
         const result = await Book.findByIdAndUpdate(id, request.body, { new: true });
         if (!result) {
             return response.status(404).json({ message: "Book not found" });
@@ -88,11 +84,31 @@ router.put('/:id', async (request, response) => {
     }
 });
 
+// ✅ NEW Route to update only the copies count
+router.patch('/:id/copies', async (request, response) => {
+    try {
+        const { copies } = request.body;
+        const book = await Book.findById(request.params.id);
+
+        if (!book) {
+            return response.status(404).json({ message: 'Book not found' });
+        }
+
+        // Ensure copies does not go below 0
+        book.copies = Math.max(0, book.copies + copies);
+        await book.save();
+
+        response.status(200).json({ message: 'Copies updated successfully', book });
+    } catch (error) {
+        console.log(error);
+        response.status(500).send({ message: "Error updating copies", error: error.message });
+    }
+});
+
 // Route to delete a book
 router.delete('/:id', async (request, response) => {
     try {
         const { id } = request.params;
-
         const result = await Book.findByIdAndDelete(id);
 
         if (!result) {
