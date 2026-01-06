@@ -1,6 +1,11 @@
 # 📚 Bookstore Management System
-
 The Bookstore Management System is a full-stack **CRUD-based application** designed to manage books, inventory, users, and orders for small-scale bookstores.
+
+
+
+
+https://github.com/user-attachments/assets/f8d48087-c24f-4e65-afec-3595130fb84e
+
 
 ---
 
